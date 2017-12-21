@@ -40,7 +40,6 @@ def add_highest(api_result, saved_result):
         saved_result["all_time_high"] = saved_result["price_usd"]
 
     if all_time_high(api_result, saved_result):
-        print("Added highest")
         api_result["all_time_high"] = api_result["price_usd"]
         return api_result
 
@@ -49,7 +48,9 @@ def add_highest(api_result, saved_result):
 
 def get_secret():
     with open("secret", "r") as secret_file:
-        return secret_file.read()
+        secret = secret_file.read()
+        print("secret: " + secret)
+        return secret
 
 
 def get_bot_url():
@@ -78,8 +79,10 @@ Stijging *7d*: {}%
             new_result["percent_change_24h"],
             new_result["percent_change_7d"])
 
+    url = get_bot_url() + "sendMessage"
+
     requests.post(
-        get_bot_url() + "sendMessage",
+        url,
         data={'chat_id': 12974128,
               'text': message,
               'parse_mode': 'markdown'})
@@ -93,13 +96,11 @@ if __name__ == "__main__":
     try:
         saved_result = get_saved_ticker_result(coin_id)
     except FileNotFoundError:
-        write_ticker_result(new_result)
+        write_ticker_result(add_highest(new_result, new_result))
         sys.exit(0)
 
-    print(new_result)
-    print(saved_result)
-
-    if all_time_high(new_result, add_highest(new_result, saved_result)):
+    if all_time_high(new_result, saved_result):
+        print("notifying...")
         notify_bot(new_result)
 
     write_ticker_result(add_highest(new_result, saved_result))
