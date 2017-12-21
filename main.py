@@ -80,12 +80,14 @@ Stijging *7d*: {}%
             new_result["percent_change_7d"])
 
     url = get_bot_url() + "sendMessage"
+    print(url)
 
-    requests.post(
+    print(requests.post(
         url,
         data={'chat_id': 12974128,
               'text': message,
               'parse_mode': 'markdown'})
+          )
 
 
 if __name__ == "__main__":
