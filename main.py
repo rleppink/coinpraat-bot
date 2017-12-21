@@ -52,7 +52,7 @@ def get_secret():
 
 
 def get_bot_url():
-    return "https://api.telegram.org/bot{}/".format(get_secret())
+    return "https://api.telegram.org/bot{}/".format(get_secret().strip())
 
 
 def notify_bot(new_result):
@@ -77,15 +77,14 @@ Stijging *7d*: {}%
             new_result["percent_change_24h"],
             new_result["percent_change_7d"])
 
-    url = "{}sendMessage".format(get_bot_url().strip())
-    print(url)
+    url = "{}sendMessage".format(get_bot_url())
+    
 
-    print(requests.post(
+    requests.post(
         url,
-        data={'chat_id': 12974128,
+        data={'chat_id': -1001370121382,
               'text': message,
               'parse_mode': 'markdown'})
-          )
 
 
 if __name__ == "__main__":
