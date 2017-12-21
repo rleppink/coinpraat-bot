@@ -99,7 +99,7 @@ if __name__ == "__main__":
     print(new_result)
     print(saved_result)
 
-    if all_time_high(new_result, saved_result):
+    if all_time_high(new_result, add_highest(new_result, saved_result)):
         notify_bot(new_result)
 
     write_ticker_result(add_highest(new_result, saved_result))
