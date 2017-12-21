@@ -89,7 +89,12 @@ if __name__ == "__main__":
     coin_id = sys.argv[1]
 
     new_result = get_api_ticker_result(coin_id)
-    saved_result = get_saved_ticker_result(coin_id)
+    saved_result = None
+    try:
+        saved_result = get_saved_ticker_result(coin_id)
+    except FileNotFoundError:
+        write_ticker_result(new_result)
+        sys.exit(0)
 
     print(new_result)
     print(saved_result)
