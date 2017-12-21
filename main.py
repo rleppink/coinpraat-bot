@@ -48,9 +48,7 @@ def add_highest(api_result, saved_result):
 
 def get_secret():
     with open("secret", "r") as secret_file:
-        secret = secret_file.read()
-        print("secret: " + secret)
-        return secret
+        return secret_file.read()
 
 
 def get_bot_url():
@@ -102,7 +100,6 @@ if __name__ == "__main__":
         sys.exit(0)
 
     if all_time_high(new_result, saved_result):
-        print("notifying...")
         notify_bot(new_result)
 
     write_ticker_result(add_highest(new_result, saved_result))
