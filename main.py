@@ -77,7 +77,7 @@ Stijging *7d*: {}%
             new_result["percent_change_24h"],
             new_result["percent_change_7d"])
 
-    url = get_bot_url() + "sendMessage"
+    url = "{}sendMessage".format(get_bot_url())
     print(url)
 
     print(requests.post(
