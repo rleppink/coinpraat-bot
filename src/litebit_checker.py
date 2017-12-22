@@ -8,6 +8,8 @@ import arbotrator
 response = requests.get("https://www.litebit.eu/en/buy/ripple")
 litebit_page = response.text
 
+print(response.status_code)
+
 
 with open("result", "w") as result_file:
     result_file.write(litebit_page.encode("ascii", "ignore").decode("ascii"))
@@ -23,7 +25,8 @@ if response.status_code is not 200 or \
 
 
 if (">0 available" not in litebit_page) and \
-   ("Due to maintenance on other exchanges" not in litebit_page):
+   ("Due to maintenance on other exchanges" not in litebit_page) and \
+   (" available" in litebit_page):
         arbotrator.send_message(
             """
 LiteBit lijkt Ripple/XRP beschikbaar te hebben!
