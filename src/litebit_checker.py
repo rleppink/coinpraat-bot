@@ -16,6 +16,6 @@ if ("0 available" not in litebit_page) and \
    ("Due to maintenance on other exchanges" not in litebit_page):
         arbotrator.send_message(
             """
-LiteBit lijkt Ripple/XRP bescihkbaar te hebben!
+LiteBit lijkt Ripple/XRP beschikbaar te hebben!
 https://www.litebit.eu/nl/kopen/ripple"
             """)
