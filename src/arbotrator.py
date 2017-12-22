@@ -24,6 +24,7 @@ def send_message(message):
         url,
         data={'chat_id': get_chat_id(),
               'text': message,
+              'disable_web_page_preview': true,
               'parse_mode': 'markdown'})
 
 
