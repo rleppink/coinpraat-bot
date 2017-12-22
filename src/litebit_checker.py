@@ -5,30 +5,28 @@ import requests
 import arbotrator
 
 
-response = requests.get("https://www.litebit.eu/en/buy/ripple")
-litebit_page = response.text
-
-print(response.status_code)
+def get_litebit_ripple():
+    return requests.get("https://api.litebit.eu/market/xrp")
 
 
-with open("result", "w") as result_file:
-    result_file.write(litebit_page.encode("ascii", "ignore").decode("ascii"))
+if __name__ == "__main__":
+    response = get_litebit_ripple()
+    if response.json()["success"] is False:
+        sys.exit(0)
 
-
-if response.status_code is not 200 or \
-   ("Checking your browser" in litebit_page) or \
-   ("The web server reported a bad gateway error" in litebit_page) or \
-   ("Connection timed out" in litebit_page):
-    # Don't bother with CloudFlare protection thing
-    print("Foiled!")
-    sys.exit(0)
-
-
-if (">0 available" not in litebit_page) and \
-   ("Due to maintenance on other exchanges" not in litebit_page) and \
-   (" available" in litebit_page):
-        arbotrator.send_message(
+    if float(response.json()["result"]["available"]) > 0:
+        message = \
             """
-LiteBit lijkt Ripple/XRP beschikbaar te hebben!
+🚨 *RIPPLES!* 🚨
+
+LiteBit heeft Ripple/XRP beschikbaar!
+Koopprijs *EUR*: €{}
+Verkoopprijs *EUR*: €{}
+
 https://www.litebit.eu/nl/kopen/ripple
-            """)
+            """.format(response.json()["result"]["buy"],
+                       response.json()["result"]["sell"])
+
+        arbotrator.send_message(message)
+    else:
+        print("Sorry, kid.")
