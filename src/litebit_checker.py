@@ -9,11 +9,12 @@ litebit_page = requests.get("https://www.litebit.eu/en/buy/ripple").text
 
 
 with open("result", "w") as result_file:
-    result_file.write(litebit_page.encode('ascii', 'ignore'))
+    result_file.write(litebit_page.encode("ascii", "ignore").decode("ascii"))
 
 
 if ("Checking your browser" in litebit_page):
     # Don't bother with CloudFlare protection thing
+    print("Foiled!")
     sys.exit(0)
 
 
