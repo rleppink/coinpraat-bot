@@ -12,7 +12,8 @@ with open("result", "w") as result_file:
     result_file.write(litebit_page.encode("ascii", "ignore").decode("ascii"))
 
 
-if ("Checking your browser" in litebit_page):
+if ("Checking your browser" in litebit_page) or \
+   ("The web server reported a bad gateway error" in litebit_page):
     # Don't bother with CloudFlare protection thing
     print("Foiled!")
     sys.exit(0)
