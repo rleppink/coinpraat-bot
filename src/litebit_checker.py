@@ -12,5 +12,3 @@ if ("0 available" not in litebit_page) and \
 LiteBit lijkt Ripple/XRP bescihkbaar te hebben!
 https://www.litebit.eu/nl/kopen/ripple"
             """)
-else:
-    print("Nothing, sorry")
