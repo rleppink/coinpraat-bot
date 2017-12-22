@@ -3,9 +3,9 @@ import sys
 import requests
 
 
-def get_secret():
-    with open("../private/secret", "r") as secret_file:
-        return secret_file.read().strip()
+def get_telegram_bot_token():
+    with open("../private/telegram_bot_token", "r") as telegram_bot_token_file:
+        return telegram_bot_token_file.read().strip()
 
 
 def get_chat_id():
@@ -14,7 +14,7 @@ def get_chat_id():
 
 
 def get_bot_url():
-    return "https://api.telegram.org/bot{}/".format(get_secret())
+    return "https://api.telegram.org/bot{}/".format(get_telegram_bot_token())
 
 
 def send_message(message):
