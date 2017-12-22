@@ -20,13 +20,13 @@ if __name__ == "__main__":
 🚨 *RIPPLES!* 🚨
 
 LiteBit heeft Ripple/XRP beschikbaar!
+Voorraad: {}
 Koopprijs *EUR*: €{}
 Verkoopprijs *EUR*: €{}
 
 https://www.litebit.eu/nl/kopen/ripple
-            """.format(response.json()["result"]["buy"],
+            """.format(response.json()["result"]["available"],
+                       response.json()["result"]["buy"],
                        response.json()["result"]["sell"])
 
         arbotrator.send_message(message)
-    else:
-        print("Sorry, kid.")
