@@ -1,7 +1,17 @@
+from datetime import datetime
 import sys
+
+import tzlocal
 
 import arbotrator
 import ticker
+
+
+def convert_unix_timestamp(unix_timestamp):
+    return \
+        datetime \
+        .fromtimestamp(unix_timestamp, tzlocal.get_localzone()) \
+        .strftime("%Y-%m-%d %H:%M:%S (%Z)")
 
 
 def notify_bot(ath_result):
@@ -18,6 +28,8 @@ Huidige prijs *BTC*: B{}
 Stijging *1u*: {}%
 Stijging *24u*: {}%
 Stijging *7d*: {}%
+
+_Prijs van {}_
         """.format(
             new_result["name"],
             new_result["price_usd"],
@@ -25,7 +37,8 @@ Stijging *7d*: {}%
             new_result["price_btc"],
             new_result["percent_change_1h"],
             new_result["percent_change_24h"],
-            new_result["percent_change_7d"])
+            new_result["percent_change_7d"],
+            convert_unix_timestamp(int(new_result["last_updated"])))
 
     arbotrator.send_message(message)
 
