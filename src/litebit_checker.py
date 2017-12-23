@@ -19,7 +19,7 @@ def add_check(abbr):
 
     with open(check_directory() + abbr, "w") as abbr_file:
         arbotrator.send_message(
-            "Jo, ik ga \"{}\" voor je in de gaten houden!"\
+            "Jo, ik ga \"{}\" voor je in de gaten houden op LiteBit!"\
             .format(abbr))
 
         abbr_file.write("")
