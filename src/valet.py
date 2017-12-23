@@ -19,6 +19,11 @@ def auth_path(url):
     return "/{}/{}/".format(get_webhook_token(), url)
 
 
+@app.route("/")
+def hello():
+    return "Hello!"
+
+
 @app.route(auth_path("updates"), methods=["POST"])
 def listen_closely():
     if "message" not in request.get_json():
