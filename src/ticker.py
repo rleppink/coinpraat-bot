@@ -14,14 +14,16 @@ def get_ticker_result(coin_id):
 
 
 def get_api_ticker_result(coin_id):
-    tickerUrl = \
+    ticker_url = \
         "https://api.coinmarketcap.com/v1/ticker/{0}/?convert=EUR"\
         .format(coin_id)
 
-    ticker_result = requests.get(tickerUrl).json()[0]
-    write_ticker_result(coin_id, ticker_result)
-
-    return ticker_result
+    try:
+        ticker_result = requests.get(ticker_url).json()[0]
+        write_ticker_result(coin_id, ticker_result)
+        return ticker_result
+    except:
+        return None
 
 
 def ticker_result_path(coin_id):

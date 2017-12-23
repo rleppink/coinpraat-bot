@@ -1,42 +1,68 @@
-from flask import Flask
-from flask import abort
-from flask import request
+import requests
+import time
 
 import arbotrator
 import my_utils
 import ticker
 
 
-app = Flask("CoinpraatValet")
+def get_update_id_file():
+    return "../data/last_update_id"
 
 
-def get_webhook_token():
-    with open("../private/webhook_token", "r") as webhook_token_file:
-        return webhook_token_file.read().strip()
+def get_last_update_id():
+    try:
+        with open(get_update_id_file(), "r") as last_update_id_file:
+            return last_update_id_file.read().strip()
+    except FileNotFoundError:
+        return -1
 
 
-def auth_path(url):
-    return "/{}/{}/".format(get_webhook_token(), url)
+def write_last_update_id(last_update_id):
+    with open(get_update_id_file(), "w") as last_update_id_file:
+        last_update_id_file.write(str(last_update_id))
 
 
-@app.route("/wh")
-def hello():
-    print(request.get_json())
-    return "Ok!"
+def longpoll_updates():
+    update_id = int(get_last_update_id()) + 1
+    update = \
+        requests.post(
+            arbotrator.get_bot_url() + "getUpdates",
+            data = { "offset": update_id, "limit": 1, "timeout": 30 }).json()
+
+    return update
 
 
-@app.route(auth_path("get_coin"), methods=["POST"])
-def get_coin():
-    if "message" not in request.get_json():
-        abort(405)
+def handle_update(update):
+    if (update["ok"] is False) or \
+       (update["result"] == []):
+        return None
 
-    if request.get_json()["message"]["text"].startswith("/prijs"):
-        coin_id = request.get_json()["message"]["text"].split(" ")[1]
+    result = update["result"][0]
+    write_last_update_id(result["update_id"])
 
-        result = ticker.get_ticker_result(coin_id)
+    if result["message"]["text"].startswith("/prijs"):
+        handle_price(result)
 
-        message = \
-                """
+    return ""
+
+
+def determine_coin_id(message_text):
+    return "-".join(message_text.split(" ")[1:]).lower()
+
+
+def handle_price(update_result):
+    coin_id = determine_coin_id(update_result["message"]["text"])
+    ticker_result = ticker.get_ticker_result(coin_id)
+
+    if ticker_result is None:
+        arbotrator.send_message(
+            "Sorry, ik kan geen coin vinden met de naam \"{}\"" \
+            .format(" ".join(update_result["message"]["text"].split(" ")[1:])))
+        return
+
+    message = \
+        """
 📈 *{}* 📉
 
 Huidige prijs *USD*: ${}
@@ -48,32 +74,21 @@ Verandering *24u*: {}%
 Verandering *7d*: {}%
 
 _Prijs van {}_
-                """.format(result["name"],
-                           result["price_usd"],
-                           result["price_eur"],
-                           result["price_btc"],
-                           result["percent_change_1h"],
-                           result["percent_change_24h"],
-                           result["percent_change_7d"],
-                           my_utils \
-                           .convert_unix_timestamp(
-                               int(result["last_updated"])))
+        """.format(ticker_result["name"],
+                   ticker_result["price_usd"],
+                   ticker_result["price_eur"],
+                   ticker_result["price_btc"],
+                   ticker_result["percent_change_1h"],
+                   ticker_result["percent_change_24h"],
+                   ticker_result["percent_change_7d"],
+                   my_utils \
+                   .convert_unix_timestamp(
+                        int(ticker_result["last_updated"])))
 
-        arbotrator.send_message(message)
-
-    return ""
-
-
-@app.errorhandler(404)
-def unknown(error):
-    abort(401)
+    arbotrator.send_message(message)
 
 
 if __name__ == "__main__":
-    context = ("../private/cert.pem", "../private/key.pem")
-    app.run(
-        host="0.0.0.0",
-        port=8443,
-        ssl_context=context,
-        threaded=True,
-        debug=True)
+    while True:
+        update = longpoll_updates()
+        handle_update(update)
