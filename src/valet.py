@@ -45,7 +45,7 @@ def unknown(error):
 
 
 if __name__ == "__main__":
-    context = ("../private/cert.cert", "../private/key.key")
+    context = ("../private/cert.pem", "../private/key.pem")
     app.run(
         host="0.0.0.0",
         port=44345,
