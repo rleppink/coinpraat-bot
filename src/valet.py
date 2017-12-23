@@ -47,8 +47,8 @@ def unknown(error):
 if __name__ == "__main__":
     context = ("../private/cert.cert", "../private/key.key")
     app.run(
-        host="127.0.0.1",
-        port=5000,
+        host="0.0.0.0",
+        port=44345,
         ssl_context=context,
         threaded=True,
         debug=True)
