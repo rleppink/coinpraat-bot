@@ -70,7 +70,7 @@ _Ik heb bij deze de check ook weer weggehaald._
                        litebit_response["result"]["name"].lower())
 
         arbotrator.send_message(message)
-        remove_check(litebit_response["abbr"])
+        remove_check(litebit_response["result"]["abbr"])
 
 
 if __name__ == "__main__":
