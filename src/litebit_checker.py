@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*- 
+
+
 import os
 import sys
 
@@ -71,6 +74,8 @@ _Ik heb bij deze de check ook weer weggehaald._
 
         arbotrator.send_message(message)
         remove_check(litebit_response["abbr"])
+
+
 if __name__ == "__main__":
     coins = os.listdir("../data/litebit_checks/")
     if len(coins) == 0:
