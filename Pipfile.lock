@@ -5,16 +5,16 @@
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
-            "implementation_version": "0",
+            "implementation_version": "3.4.2",
             "os_name": "posix",
             "platform_machine": "x86_64",
             "platform_python_implementation": "CPython",
             "platform_release": "3.16.0-4-amd64",
             "platform_system": "Linux",
             "platform_version": "#1 SMP Debian 3.16.7-ckt25-2 (2016-04-08)",
-            "python_full_version": "2.7.9",
-            "python_version": "2.7",
-            "sys_platform": "linux2"
+            "python_full_version": "3.4.2",
+            "python_version": "3.4",
+            "sys_platform": "linux"
         },
         "pipfile-spec": 6,
         "requires": {},
