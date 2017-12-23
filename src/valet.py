@@ -2,6 +2,7 @@ import requests
 import time
 
 import arbotrator
+import litebit_checker
 import my_utils
 import ticker
 
@@ -41,8 +42,15 @@ def handle_update(update):
     result = update["result"][0]
     write_last_update_id(result["update_id"])
 
-    if result["message"]["text"].startswith("/prijs"):
+    if "edited_message" in result:
+        # Ain't nobody got time for that
+        return ""
+
+    message_text = result["message"]["text"]
+    if message_text.startswith("/prijs"):
         handle_price(result)
+    elif message_text.startswith("/check"):
+        handle_check(result)
 
     return ""
 
@@ -86,6 +94,12 @@ _Prijs van {}_
                         int(ticker_result["last_updated"])))
 
     arbotrator.send_message(message)
+
+
+def handle_check(update_result):
+    coin_id = " ".join(update_result["message"]["text"].lower().split(" ")[1:])
+    print(coin_id)
+    litebit_checker.add_check(coin_id)
 
 
 if __name__ == "__main__":
