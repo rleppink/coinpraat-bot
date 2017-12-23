@@ -35,7 +35,7 @@ https://www.litebit.eu/nl/kopen/{}
             """.format(
                        response.json()["result"]["name"].upper(),
                        response.json()["result"]["name"],
-                       response.json()["result"]["abbr"],
+                       response.json()["result"]["abbr"].upper(),
                        response.json()["result"]["available"],
                        response.json()["result"]["buy"],
                        response.json()["result"]["sell"],
