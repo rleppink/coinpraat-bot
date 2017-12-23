@@ -14,8 +14,6 @@ def get_ticker_result(coin_id):
 
 
 def get_api_ticker_result(coin_id):
-    print("Getting API data...\n")
-
     tickerUrl = \
         "https://api.coinmarketcap.com/v1/ticker/{0}/?convert=EUR"\
         .format(coin_id)
