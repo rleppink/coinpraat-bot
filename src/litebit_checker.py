@@ -20,6 +20,7 @@ if __name__ == "__main__":
 🚨 *RIPPLES!* 🚨
 
 LiteBit heeft Ripple/XRP beschikbaar!
+
 Voorraad: {}
 Koopprijs *EUR*: €{}
 Verkoopprijs *EUR*: €{}
