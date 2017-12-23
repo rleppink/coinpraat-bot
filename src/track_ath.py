@@ -1,17 +1,8 @@
-from datetime import datetime
 import sys
 
-import tzlocal
-
 import arbotrator
+import my_utils
 import ticker
-
-
-def convert_unix_timestamp(unix_timestamp):
-    return \
-        datetime \
-        .fromtimestamp(unix_timestamp, tzlocal.get_localzone()) \
-        .strftime("%Y-%m-%d %H:%M:%S (%Z)")
 
 
 def notify_bot(ath_result):
@@ -38,7 +29,7 @@ _Prijs van {}_
             ath_result["percent_change_1h"],
             ath_result["percent_change_24h"],
             ath_result["percent_change_7d"],
-            convert_unix_timestamp(int(ath_result["last_updated"])))
+            my_utils.convert_unix_timestamp(int(ath_result["last_updated"])))
 
     arbotrator.send_message(message)
 

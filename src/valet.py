@@ -1,9 +1,9 @@
 from flask import Flask
-
 from flask import abort
 from flask import request
 
 import arbotrator
+import my_utils
 import ticker
 
 
@@ -19,27 +19,47 @@ def auth_path(url):
     return "/{}/{}/".format(get_webhook_token(), url)
 
 
-@app.route("/")
+@app.route("/wh")
 def hello():
-    return "Hello!"
+    print(request.get_json())
+    return "Ok!"
 
 
-@app.route(auth_path("updates"), methods=["POST"])
-def listen_closely():
+@app.route(auth_path("get_coin"), methods=["POST"])
+def get_coin():
     if "message" not in request.get_json():
         abort(405)
 
     if request.get_json()["message"]["text"].startswith("/prijs"):
         coin_id = request.get_json()["message"]["text"].split(" ")[1]
 
-        result = ticker.get_api_ticker_result(coin_id)
-        arbotrator \
-            .send_message("Hi {}, {} is op dit moment *USD*: {}"
-                          .format(
-                              request.get_json()
-                              ["message"]["from"]["first_name"],
-                              result["name"],
-                              result["price_usd"]))
+        result = ticker.get_ticker_result(coin_id)
+
+        message = \
+                """
+📈 *{}* 📉
+
+Huidige prijs *USD*: ${}
+Huidige prijs *EUR*: €{}
+Huidige prijs *BTC*: B{}
+
+Verandering *1u*: {}%
+Verandering *24u*: {}%
+Verandering *7d*: {}%
+
+_Prijs van {}_
+                """.format(result["name"],
+                           result["price_usd"],
+                           result["price_eur"],
+                           result["price_btc"],
+                           result["percent_change_1h"],
+                           result["percent_change_24h"],
+                           result["percent_change_7d"],
+                           my_utils \
+                           .convert_unix_timestamp(
+                               int(result["last_updated"])))
+
+        arbotrator.send_message(message)
 
     return ""
 
@@ -53,7 +73,7 @@ if __name__ == "__main__":
     context = ("../private/cert.pem", "../private/key.pem")
     app.run(
         host="0.0.0.0",
-        port=44345,
+        port=8443,
         ssl_context=context,
         threaded=True,
         debug=True)
