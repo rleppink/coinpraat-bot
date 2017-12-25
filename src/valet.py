@@ -52,6 +52,7 @@ def handle_update(update):
     message_text = result["message"]["text"] \
                    .encode("ascii", "ignore") \
                    .decode("ascii")
+
     if message_text.startswith("/prijs"):
         handle_price(result)
     elif message_text.startswith("/check"):
@@ -66,7 +67,12 @@ def determine_coin_id(message_text):
 
 def handle_price(update_result):
     coin_id = determine_coin_id(update_result["message"]["text"])
-    ticker_result = ticker.get_ticker_result(coin_id)
+
+    # This try can be removed once the server has a newer version of Python
+    try: 
+        ticker_result = ticker.get_ticker_result(coin_id)
+    except UnicodeEncodeError:
+        return
 
     if ticker_result is None:
         arbotrator.send_message(
