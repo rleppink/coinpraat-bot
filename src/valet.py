@@ -42,7 +42,7 @@ def handle_update(update):
     result = update["result"][0]
     write_last_update_id(result["update_id"])
 
-    if result["message"]["chat"]["id"] is not arbotratror.get_chat_id():
+    if result["message"]["chat"]["id"] is not arbotrator.get_chat_id():
         # Ignore other chats
         return ""
 
