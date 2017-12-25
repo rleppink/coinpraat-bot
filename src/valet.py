@@ -44,6 +44,7 @@ def handle_update(update):
 
     if result["message"]["chat"]["id"] is not arbotrator.get_chat_id():
         # Ignore other chats
+        print("Not same chat id")
         return ""
 
     if "edited_message" in result:
@@ -53,6 +54,8 @@ def handle_update(update):
     message_text = result["message"]["text"] \
                    .decode("ascii")\
                    .encode("ascii", "ignore")
+    print("Handling: ")
+    print(message_text)
     if message_text.startswith("/prijs"):
         handle_price(result)
     elif message_text.startswith("/check"):
