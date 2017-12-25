@@ -24,8 +24,7 @@ def write_last_update_id(last_update_id):
         last_update_id_file.write(str(last_update_id))
 
 
-def longpoll_updates():
-    update_id = int(get_last_update_id()) + 1
+def longpoll_updates(update_id):
     update = \
         requests.post(
             arbotrator.get_bot_url() + "getUpdates",
@@ -42,7 +41,7 @@ def handle_update(update):
     result = update["result"][0]
     write_last_update_id(result["update_id"])
 
-    if result["message"]["chat"]["id"] != arbotrator.get_chat_id():
+    if str(result["message"]["chat"]["id"]) != arbotrator.get_chat_id():
         # Ignore other chats
         return ""
 
@@ -108,6 +107,8 @@ def handle_check(update_result):
 
 
 if __name__ == "__main__":
+    update = longpoll_updates(-1)
     while True:
-        update = longpoll_updates()
         handle_update(update)
+        update_id = int(get_last_update_id()) + 1
+        update = longpoll_updates(update_id)
