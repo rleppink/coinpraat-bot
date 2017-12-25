@@ -42,11 +42,17 @@ def handle_update(update):
     result = update["result"][0]
     write_last_update_id(result["update_id"])
 
+    if result["message"]["chat"]["id"] is not arbotratror.get_chat_id():
+        # Ignore other chats
+        return ""
+
     if "edited_message" in result:
         # Ain't nobody got time for that
         return ""
 
-    message_text = result["message"]["text"]
+    message_text = result["message"]["text"] \
+                   .decode("ascii")\
+                   .encode("ascii", "ignore")
     if message_text.startswith("/prijs"):
         handle_price(result)
     elif message_text.startswith("/check"):
@@ -98,7 +104,6 @@ _Prijs van {}_
 
 def handle_check(update_result):
     coin_id = " ".join(update_result["message"]["text"].lower().split(" ")[1:])
-    print(coin_id)
     litebit_checker.add_check(coin_id)
 
 
