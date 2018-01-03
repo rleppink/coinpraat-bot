@@ -8,28 +8,13 @@ import ticker
 def notify_bot(ath_result):
     message = \
         """
-🚀 *To the moon!* 🚀
-
-{} heeft een nieuwe *all-time-high* bereikt!
-
-Huidige prijs *USD*: ${}
-Huidige prijs *EUR*: €{}
-Huidige prijs *BTC*: B{}
-
-Stijging *1u*: {}%
-Stijging *24u*: {}%
-Stijging *7d*: {}%
-
-_Prijs van {}_
+🚀 *{} to the moon!* 🚀 Nieuwe *all-time-high*: ${}, €{}.
+https://coinmarketcap.com/currencies/{}
         """.format(
             ath_result["name"],
             ath_result["price_usd"],
             ath_result["price_eur"],
-            ath_result["price_btc"],
-            ath_result["percent_change_1h"],
-            ath_result["percent_change_24h"],
-            ath_result["percent_change_7d"],
-            my_utils.convert_unix_timestamp(int(ath_result["last_updated"])))
+            ath_result["name"])
 
     arbotrator.send_message(message)
 
