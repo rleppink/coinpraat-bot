@@ -8,7 +8,8 @@ import ticker
 def notify_bot(ath_result):
     message = \
         """
-🚀 *{} to the moon!* 🚀 Nieuwe *all-time-high*: ${}, €{}.
+🚀 *{} to the moon!* 🚀
+Nieuwe *all-time-high*: ${}, €{}.
 https://coinmarketcap.com/currencies/{}
         """.format(
             ath_result["name"],
