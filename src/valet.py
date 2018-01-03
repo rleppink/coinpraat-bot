@@ -115,6 +115,10 @@ def handle_check(update_result):
 if __name__ == "__main__":
     update = longpoll_updates(-1)
     while True:
-        handle_update(update)
-        update_id = int(get_last_update_id()) + 1
-        update = longpoll_updates(update_id)
+        try:
+            handle_update(update)
+            update_id = int(get_last_update_id()) + 1
+            update = longpoll_updates(update_id)
+        except:
+            continue
+
