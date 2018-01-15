@@ -29,7 +29,7 @@ def longpoll_updates(update_id):
     update = \
         requests.post(
             arbotrator.get_bot_url() + "getUpdates",
-            data = { "offset": update_id, "limit": 1, "timeout": 30 }).json()
+            data={"offset": update_id, "limit": 1, "timeout": 30}).json()
 
     return update
 
@@ -42,6 +42,11 @@ def handle_update(update):
     result = update["result"][0]
     write_last_update_id(result["update_id"])
 
+    if "message" not in result:
+        # Something unknown is doing we don't know what.
+        # That is what our knowledge amounts to.
+        return
+
     if str(result["message"]["chat"]["id"]) != arbotrator.get_chat_id():
         # Ignore other chats
         return ""
@@ -50,9 +55,10 @@ def handle_update(update):
         # Ain't nobody got time for that
         return ""
 
-    message_text = result["message"]["text"] \
-                   .encode("ascii", "ignore") \
-                   .decode("ascii")
+    message_text = \
+        result["message"]["text"] \
+        .encode("ascii", "ignore") \
+        .decode("ascii")
 
     if message_text.startswith("/prijs"):
         handle_price(result)
@@ -70,7 +76,7 @@ def handle_price(update_result):
     coin_id = determine_coin_id(update_result["message"]["text"])
 
     # This try can be removed once the server has a newer version of Python
-    try: 
+    try:
         ticker_result = ticker.get_ticker_result(coin_id)
     except UnicodeEncodeError:
         return
@@ -128,4 +134,3 @@ if __name__ == "__main__":
         handle_update(update)
         update_id = int(get_last_update_id()) + 1
         update = longpoll_updates(update_id)
-
