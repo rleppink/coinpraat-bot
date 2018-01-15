@@ -1,3 +1,4 @@
+import humanize
 import requests
 import time
 
@@ -80,6 +81,12 @@ def handle_price(update_result):
             .format(" ".join(update_result["message"]["text"].split(" ")[1:])))
         return
 
+    mcusd = ticker_result["market_cap_usd"]
+    if mcusd is not None:
+        mcusd = "$" + humanize.intword(int(float(ticker_result["market_cap_usd"])))
+    else:
+        mcusd = "Onbekend"
+
     message = \
         """
 📈 *{}* 📉
@@ -92,6 +99,8 @@ Verandering *1u*: {}%
 Verandering *24u*: {}%
 Verandering *7d*: {}%
 
+Market cap *USD*: {}
+
 _Prijs van {}_
         """.format(ticker_result["name"],
                    ticker_result["price_usd"],
@@ -100,6 +109,7 @@ _Prijs van {}_
                    ticker_result["percent_change_1h"],
                    ticker_result["percent_change_24h"],
                    ticker_result["percent_change_7d"],
+                   mcusd,
                    my_utils \
                    .convert_unix_timestamp(
                         int(ticker_result["last_updated"])))
@@ -115,10 +125,7 @@ def handle_check(update_result):
 if __name__ == "__main__":
     update = longpoll_updates(-1)
     while True:
-        try:
-            handle_update(update)
-            update_id = int(get_last_update_id()) + 1
-            update = longpoll_updates(update_id)
-        except:
-            continue
+        handle_update(update)
+        update_id = int(get_last_update_id()) + 1
+        update = longpoll_updates(update_id)
 

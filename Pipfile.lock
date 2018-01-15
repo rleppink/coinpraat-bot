@@ -1,20 +1,20 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "018492e6c5ae610541e5a46c0e9ff8f49047dd9abc4b2972e3a137806ef08f5d"
+            "sha256": "0022b79710268dc5e9af341389b4e57d99d2690ebe5d5ff9e69fdd2f044a1d11"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
-            "implementation_version": "3.4.2",
+            "implementation_version": "0",
             "os_name": "posix",
             "platform_machine": "x86_64",
             "platform_python_implementation": "CPython",
             "platform_release": "3.16.0-4-amd64",
             "platform_system": "Linux",
             "platform_version": "#1 SMP Debian 3.16.7-ckt25-2 (2016-04-08)",
-            "python_full_version": "3.4.2",
-            "python_version": "3.4",
-            "sys_platform": "linux"
+            "python_full_version": "2.7.9",
+            "python_version": "2.7",
+            "sys_platform": "linux2"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -61,6 +61,12 @@
                 "sha256:eee1169f0ca667be05db3351a0960765620dad53f53434262ff8901b68a1b622"
             ],
             "version": "==19.7.1"
+        },
+        "humanize": {
+            "hashes": [
+                "sha256:a43f57115831ac7c70de098e6ac46ac13be00d69abbf60bdcac251344785bb19"
+            ],
+            "version": "==0.5.1"
         },
         "idna": {
             "hashes": [
@@ -124,10 +130,10 @@
         },
         "werkzeug": {
             "hashes": [
-                "sha256:f3000aa146ce8a9da8ca3e978e0e931c2a58eb56c323a5efb6b4307f7832b549",
-                "sha256:6246e5fc98a505824113fb6aca993d45ea284a2bcffdc2c65d0c538e53e4abd3"
+                "sha256:d5da73735293558eb1651ee2fddc4d0dedcfa06538b8813a2e20011583c9e49b",
+                "sha256:c3fd7a7d41976d9f44db327260e263132466836cef6f91512889ed60ad26557c"
             ],
-            "version": "==0.13"
+            "version": "==0.14.1"
         }
     },
     "develop": {}

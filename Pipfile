@@ -11,6 +11,7 @@ requests = "*"
 gunicorn = "*"
 flask = "*"
 tzlocal = "*"
+humanize = "*"
 
 
 [dev-packages]
