@@ -120,10 +120,10 @@ https://coinmarketcap.com/currencies/{}
                    mcap,
                    nonermalize(ticker_result, "available_supply"),
                    nonermalize(ticker_result, "total_supply"),
-                   ticker_result["name"],
                    my_utils
                    .convert_unix_timestamp(
-                        int(ticker_result["last_updated"])))
+                        int(ticker_result["last_updated"])),
+                   ticker_result["name"])
 
     arbotrator.send_message(message)
 
