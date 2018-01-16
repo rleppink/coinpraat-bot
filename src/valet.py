@@ -105,7 +105,7 @@ def handle_price(update_result):
 *$*{} | *€*{} | *B*{}
 *1u* {}% | *24u* {}% | *7d* {}%
 
-Market cap *USD*: ${}
+Market cap *USD*: {}
 Voorraad: {} / {}
 
 _Prijs van {}_
