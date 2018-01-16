@@ -72,6 +72,13 @@ def determine_coin_id(message_text):
     return "-".join(message_text.split(" ")[1:]).lower()
 
 
+def nonermalize(ticker_result, key):
+    if ticker_result[key] is None:
+        return "Onbekend"
+
+    return humanize.intword(int(float(ticker_result[key])))
+
+
 def handle_price(update_result):
     coin_id = determine_coin_id(update_result["message"]["text"])
 
@@ -83,27 +90,13 @@ def handle_price(update_result):
 
     if ticker_result is None:
         arbotrator.send_message(
-            "Sorry, ik kan geen coin vinden met de naam \"{}\"" \
+            "Sorry, ik kan geen coin vinden met de naam \"{}\""
             .format(" ".join(update_result["message"]["text"].split(" ")[1:])))
         return
 
-    mcusd = ticker_result["market_cap_usd"]
-    if mcusd is not None:
-        mcusd = "$" + humanize.intword(int(float(ticker_result["market_cap_usd"])))
-    else:
-        mcusd = "Onbekend"
-
-    available_supply = ticker_result["available_supply"]
-    if available_supply is not None:
-        available_supply = humanize.intword(int(float(ticker_result["available_supply"])))
-    else:
-        available_supply = "Onbekend"
-
-    total_supply = ticker_result["total_supply"]
-    if total_supply is not None:
-        total_supply = humanize.intword(int(float(ticker_result["total_supply"])))
-    else:
-        total_supply = "Onbekend"
+    mcap = nonermalize(ticker_result, "market_cap_usd")
+    if mcap is not "Onbekend":
+        mcap = "$" + mcap
 
     message = \
         """
@@ -112,10 +105,11 @@ def handle_price(update_result):
 *$*{} | *€*{} | *B*{}
 *1u* {}% | *24u* {}% | *7d* {}%
 
-Market cap *USD*: {}
+Market cap *USD*: ${}
 Voorraad: {} / {}
 
 _Prijs van {}_
+https://coinmarketcap.com/currencies/{}
         """.format(ticker_result["name"],
                    ticker_result["price_usd"],
                    ticker_result["price_eur"],
@@ -123,10 +117,11 @@ _Prijs van {}_
                    ticker_result["percent_change_1h"],
                    ticker_result["percent_change_24h"],
                    ticker_result["percent_change_7d"],
-                   mcusd,
-                   available_supply,
-                   total_supply,
-                   my_utils \
+                   mcap,
+                   nonermalize(ticker_result, "available_supply"),
+                   nonermalize(ticker_result, "total_supply"),
+                   ticker_result["name"],
+                   my_utils
                    .convert_unix_timestamp(
                         int(ticker_result["last_updated"])))
 
