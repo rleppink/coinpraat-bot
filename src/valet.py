@@ -93,19 +93,27 @@ def handle_price(update_result):
     else:
         mcusd = "Onbekend"
 
+    available_supply = ticker_result["available_supply"]
+    if available_supply is not None:
+        available_supply = humanize.intword(int(float(ticker_result["available_supply"])))
+    else:
+        available_supply = "Onbekend"
+
+    total_supply = ticker_result["total_supply"]
+    if total_supply is not None:
+        total_supply = humanize.intword(int(float(ticker_result["total_supply"])))
+    else:
+        total_supply = "Onbekend"
+
     message = \
         """
 📈 *{}* 📉
 
-Huidige prijs *USD*: ${}
-Huidige prijs *EUR*: €{}
-Huidige prijs *BTC*: B{}
-
-Verandering *1u*: {}%
-Verandering *24u*: {}%
-Verandering *7d*: {}%
+*$*{} | *€*{} | *B*{}
+*1u* {}% | *24u* {}% | *7d* {}%
 
 Market cap *USD*: {}
+Voorraad: {} / {}
 
 _Prijs van {}_
         """.format(ticker_result["name"],
@@ -116,6 +124,8 @@ _Prijs van {}_
                    ticker_result["percent_change_24h"],
                    ticker_result["percent_change_7d"],
                    mcusd,
+                   available_supply,
+                   total_supply,
                    my_utils \
                    .convert_unix_timestamp(
                         int(ticker_result["last_updated"])))
