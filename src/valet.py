@@ -142,11 +142,11 @@ def handle_market():
         """
 📈 *Totale markt* 📉
 
-*1u*: %{} | *24u*: %{} | *7d*: %{}
+*1u*: {:+0.2f}% | *24u*: {:+0.2f}% | *7d*: {:+0.2f}%
 https://coinmarketcap.com/charts/
         """.format(market_differences[0],
                    market_differences[1],
-                   market_differences[2])
+                   market_differences[2]))
 
 
 if __name__ == "__main__":
