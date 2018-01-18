@@ -144,7 +144,7 @@ def handle_market():
 
 *1u*: {:+0.2f}% | *24u*: {:+0.2f}% | *7d*: {:+0.2f}%
 
-Market cap: {}
+Market cap *USD*: ${}
 https://coinmarketcap.com/charts/
         """.format(market_differences[0],
                    market_differences[1],
