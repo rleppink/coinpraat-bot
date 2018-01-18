@@ -123,7 +123,7 @@ https://coinmarketcap.com/currencies/{}
                    my_utils
                    .convert_unix_timestamp(
                         int(ticker_result["last_updated"])),
-                   ticker_result["name"])
+                   ticker_result["id"])
 
     arbotrator.send_message(message)
 
