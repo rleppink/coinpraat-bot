@@ -1,11 +1,11 @@
 import humanize
 import requests
-import time
 
 import arbotrator
 import litebit_checker
 import my_utils
 import ticker
+import total_marketcap
 
 
 def get_update_id_file():
@@ -64,6 +64,8 @@ def handle_update(update):
         handle_price(result)
     elif message_text.startswith("/check"):
         handle_check(result)
+    elif message_text.startswith("/markt"):
+        handle_market()
 
     return ""
 
@@ -131,6 +133,20 @@ https://coinmarketcap.com/currencies/{}
 def handle_check(update_result):
     coin_id = " ".join(update_result["message"]["text"].lower().split(" ")[1:])
     litebit_checker.add_check(coin_id)
+
+
+def handle_market():
+    market_differences = total_marketcap.get_market_differences()
+
+    arbotrator.send_message(
+        """
+📈 *Totale markt* 📉
+
+*1u*: %{} | *24u*: %{} | *7d*: %{}
+https://coinmarketcap.com/charts/
+        """.format(market_differences[0],
+                   market_differences[1],
+                   market_differences[2])
 
 
 if __name__ == "__main__":
