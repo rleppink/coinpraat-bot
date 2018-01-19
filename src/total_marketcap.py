@@ -32,6 +32,9 @@ def parse_marketcap_data_hours(hours):
 
     data = get_marketcap_data(start, end)
 
+    if data is None:
+        return None
+
     first = data[:1][0][1]
     last = data[-1:][0][1]
     total = last
@@ -40,6 +43,9 @@ def parse_marketcap_data_hours(hours):
 
 
 def percent_difference(marketcap_data):
+    if marketcap_data is None:
+        return 0
+
     first = marketcap_data[0]
     last = marketcap_data[1]
     return ((last / first) * 100) - 100

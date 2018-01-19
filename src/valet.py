@@ -26,12 +26,15 @@ def write_last_update_id(last_update_id):
 
 
 def longpoll_updates(update_id):
-    update = \
+    raw_update = \
         requests.post(
             arbotrator.get_bot_url() + "getUpdates",
-            data={"offset": update_id, "limit": 1, "timeout": 30}).json()
+            data={"offset": update_id, "limit": 1, "timeout": 30})
 
-    return update
+    if raw_update is None:
+        return None
+
+    return raw_update.json()
 
 
 def handle_update(update):
@@ -138,13 +141,16 @@ def handle_check(update_result):
 def handle_market():
     market_differences = total_marketcap.get_market_differences()
 
+    if market_differences is None:
+        return
+
     arbotrator.send_message(
         """
 📈 *Totale markt* 📉
 
 *1u*: {:+0.2f}% | *24u*: {:+0.2f}% | *7d*: {:+0.2f}%
-
 Market cap *USD*: ${}
+
 https://coinmarketcap.com/charts/
         """.format(market_differences[0],
                    market_differences[1],
@@ -155,6 +161,8 @@ https://coinmarketcap.com/charts/
 if __name__ == "__main__":
     update = longpoll_updates(-1)
     while True:
-        handle_update(update)
-        update_id = int(get_last_update_id()) + 1
+        if update is not None:
+            handle_update(update)
+            update_id = int(get_last_update_id()) + 1
+
         update = longpoll_updates(update_id)
