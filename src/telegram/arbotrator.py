@@ -5,7 +5,7 @@ import requests
 
 
 def get_telegram_bot_token():
-    with open("../private/telegram_bot_token", "r") as telegram_bot_token_file:
+    with open("../../private/telegram_bot_token", "r") as telegram_bot_token_file:
         return telegram_bot_token_file.read().strip()
 
 
