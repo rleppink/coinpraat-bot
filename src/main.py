@@ -1,18 +1,19 @@
 import multiprocessing
 
+import shared
 import telegram
-
-QUEUE_SIZE = 10
 
 
 def main():
-    telegram_incoming_queue = multiprocessing.Queue(QUEUE_SIZE)
-    telegram_outgoing_queue = multiprocessing.Queue(QUEUE_SIZE)
+    config = shared.config.Config()
+
+    telegram_incoming_queue = multiprocessing.Queue(config.queue_size)
+    telegram_outgoing_queue = multiprocessing.Queue(config.queue_size)
 
     telegram_incoming_handler = \
             multiprocessing.Process(
                     target = telegram.incoming.handler,
-                    args = (telegram_incoming_queue,))
+                    args = (telegram_incoming_queue, config,))
 
     telegram_outgoing_handler = \
             multiprocessing.Process(
@@ -32,6 +33,7 @@ def main():
 
 
 def dummy_handler(incoming_queue, outgoing_queue):
+    print("[MAIN] Started dummy handler...")
     while True:
         message = incoming_queue.get()
         outgoing_queue.put(message)

@@ -106,4 +106,4 @@ venv.bak/
 # etc
 private/
 data/
-src/result
+src/shared/config.py

@@ -1,30 +1,65 @@
+import json
+import os
+
 import requests
 
+import telegram.update_getter
 
-def handler(incoming_queue, outgoing_queue):
+
+def handler(price_check_queue, config):
+    print("[IN--] Started Telegram incoming handler...")
     while True:
-        update = longpoll_updates()
+        next_update_id = get_next_update_id(config)
 
-        incoming_queue.put("New message!")
+        update = telegram.update_getter.get_workable_update(config, next_update_id)
+
+        write_last_update_id(config, update["update_id"])
+
+        # TODO: Use a less stringly typed, more strongly typed approach
+
+        if "message" not in update:
+            continue
+
+        message = update["message"]
+        if "entities" not in message:
+            continue
+
+        entities = message["entities"]
+        if entities == []:
+            continue
+
+        entity = entities[0]
+        if entity["type"] != "bot_command":
+            continue
+
+        command = message["text"][entity["offset"]:entity["length"]]
+        if command == "/prijs":
+            price_check_queue.put(update)
 
 
-def longpoll_updates():
-    def valid_update(update_check):
-        return \
-            update_check is not None and
-            update_check["ok"] is True and
-            update_check["result"] is not []
+def get_next_update_id(config):
+    last_update_id = get_last_update_id(config)
 
-    def get_update():
-        requests.post(
-            arbotrator.get_bot_url() + "getUpdates",
-            data={"offset": update_id, "limit": 1, "timeout": 30})
+    if last_update_id is None:
+        return -1
+    else:
+        return int(last_update_id) + 1
 
 
-    update = None
-    while update is None:
-        update = get_update()
-        if not valid_update(update):
-            update = None
+def get_last_update_id(config):
+    try:
+        with open(last_update_id_path(config), "r") as last_update_id_file:
+            return last_update_id_file.read().strip()
+    except FileNotFoundError:
+        return None
 
-    return update
+
+def write_last_update_id(config, last_update_id):
+    os.makedirs(last_update_id_dir(config), exist_ok = True)
+
+    with open(last_update_id_path(config), "w") as last_update_id_file:
+        last_update_id_file.write(str(last_update_id))
+
+
+def last_update_id_path(config): return config.data_path + "telegram/" + "last_update_id.txt"
+def last_update_id_dir(config): return config.data_path + "telegram/"
