@@ -19,11 +19,7 @@ def handler(price_check_queue, telegram_outgoing_queue, config):
 
 
 def check_price_info(coin_id):
-    # This try can be removed once the server has a newer version of Python
-    try:
-        ticker_result = ticker.get_ticker_result(coin_id)
-    except UnicodeEncodeError:
-        return
+    ticker_result = ticker.get_ticker_result(coin_id)
 
     if ticker_result is None:
         arbotrator.send_message(
