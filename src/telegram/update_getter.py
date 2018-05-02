@@ -10,7 +10,7 @@ def get_workable_update(config, update_id):
 
         if update_json is None \
         or update_json["ok"] is False \
-        or update_json["result"] is []:
+        or update_json["result"] == []:
             continue
 
         return update_json["result"][0]

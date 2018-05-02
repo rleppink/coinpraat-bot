@@ -8,10 +8,12 @@ import telegram.update_getter
 
 def handler(price_check_queue, config):
     print("[IN--] Started Telegram incoming handler...")
+
     while True:
         next_update_id = get_next_update_id(config)
 
-        update = telegram.update_getter.get_workable_update(config, next_update_id)
+        update = telegram.update_getter.get_workable_update(
+            config, next_update_id)
 
         write_last_update_id(config, update["update_id"])
 
@@ -55,11 +57,15 @@ def get_last_update_id(config):
 
 
 def write_last_update_id(config, last_update_id):
-    os.makedirs(last_update_id_dir(config), exist_ok = True)
+    os.makedirs(last_update_id_dir(config), exist_ok=True)
 
     with open(last_update_id_path(config), "w") as last_update_id_file:
         last_update_id_file.write(str(last_update_id))
 
 
-def last_update_id_path(config): return config.data_path + "telegram/" + "last_update_id.txt"
-def last_update_id_dir(config): return config.data_path + "telegram/"
+def last_update_id_path(config):
+    return config.data_path + "telegram/" + "last_update_id.txt"
+
+
+def last_update_id_dir(config):
+    return config.data_path + "telegram/"
