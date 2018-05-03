@@ -1,5 +1,5 @@
 def telegram_bot_url(config):
-    bot_token = config["telegram_bot_token"]
+    bot_token = config.telegram_bot_token
     default_url = "https://api.telegram.org/{}{}/"
 
     return default_url.format(

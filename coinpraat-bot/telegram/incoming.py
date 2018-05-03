@@ -64,8 +64,8 @@ def write_last_update_id(config, last_update_id):
 
 
 def last_update_id_path(config):
-    return config["data_path"] + "telegram/" + "last_update_id"
+    return config.data_path + "telegram/" + "last_update_id"
 
 
 def last_update_id_dir(config):
-    return config["data_path"] + "telegram/"
+    return config.data_path + "telegram/"

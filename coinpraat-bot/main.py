@@ -1,7 +1,8 @@
 import multiprocessing
+import types
 import yaml
 
-import coininfo
+import coinmarketcap
 import shared
 import telegram
 
@@ -12,7 +13,7 @@ def main():
     price_check_queue \
     = litebit_check_queue \
     = market_cap_check_queue \
-    = telegram_outgoing_queue = multiprocessing.Queue(config["queue_size"])
+    = telegram_outgoing_queue = multiprocessing.Queue(config.queue_size)
 
     multiprocessing.Process(
         target = telegram.incoming.handler,
@@ -22,7 +23,7 @@ def main():
         )).start()
 
     multiprocessing.Process(
-        target=coininfo.price_checker.handler,
+        target=coinmarketcap.price_checker.handler,
         args=(
             price_check_queue,
             telegram_outgoing_queue,
@@ -47,7 +48,8 @@ def queue_glue(in_queue, out_queue):
 def read_config():
     config_path = "config.yaml"
     with open(config_path, "r") as config_file:
-        return yaml.load(config_file)
+        config = yaml.load(config_file)
+        return types.SimpleNamespace(**config)
 
 
 if __name__ == "__main__":
