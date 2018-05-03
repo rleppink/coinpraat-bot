@@ -7,12 +7,12 @@ import telegram
 
 
 def main():
-    config = shared.config.Config()
+    config = read_config()
 
     price_check_queue \
     = litebit_check_queue \
     = market_cap_check_queue \
-    = telegram_outgoing_queue = multiprocessing.Queue(config.queue_size)
+    = telegram_outgoing_queue = multiprocessing.Queue(config["queue_size"])
 
     multiprocessing.Process(
         target = telegram.incoming.handler,
@@ -22,7 +22,7 @@ def main():
         )).start()
 
     multiprocessing.Process(
-        target=coininfo.coininfo.handler,
+        target=coininfo.price_checker.handler,
         args=(
             price_check_queue,
             telegram_outgoing_queue,
@@ -50,7 +50,5 @@ def read_config():
         return yaml.load(config_file)
 
 
-
 if __name__ == "__main__":
-    print(read_config())
-    # main()
+    main()

@@ -2,6 +2,8 @@ import time
 
 import requests
 
+from . import utilities
+
 
 def get_workable_update(config, update_id):
     while True:
@@ -33,9 +35,9 @@ def _request_update(config, update_id):
     """ Request an update, returns None if no valid update is given. """
     try:
         response = requests.post(
-            config.bot_api_url + "getUpdates",
-            data = {"timeout": config.timeout, "offset": update_id},
-            timeout = config.timeout)
+            utilities.telegram_bot_url(config) + "getUpdates",
+            data = {"timeout": config["api_timeout"], "offset": update_id},
+            timeout = config["api_timeout"])
 
         if response is None \
         or response.status_code is not 200:

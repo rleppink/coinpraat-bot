@@ -17,7 +17,7 @@ def handler(price_check_queue, config):
 
         write_last_update_id(config, update["update_id"])
 
-        # TODO: Use a less stringly typed, more strongly typed approach
+        # TODO: Use a less stringly typed, more strongly typed approach. json to namedtuples?
 
         if "message" not in update:
             continue
@@ -64,8 +64,8 @@ def write_last_update_id(config, last_update_id):
 
 
 def last_update_id_path(config):
-    return config.data_path + "telegram/" + "last_update_id.txt"
+    return config["data_path"] + "telegram/" + "last_update_id"
 
 
 def last_update_id_dir(config):
-    return config.data_path + "telegram/"
+    return config["data_path"] + "telegram/"
