@@ -4,11 +4,12 @@ stdenv.mkDerivation {
     name = "coinpraat-bot";
     buildInputs = [
         python36
+        python36Packages.pyyaml
         python36Packages.requests
-        python36Packages.yapf
         python36Packages.tzlocal
+        python36Packages.yapf
     ];
     shellHook = ''
-        alias run="python src/main.py"
+        alias run="python coinpraat-bot/main.py"
     '';
 }

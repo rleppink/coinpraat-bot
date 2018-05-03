@@ -104,6 +104,5 @@ venv.bak/
 .mypy_cache/
 
 # etc
-private/
 data/
-src/shared/config.py
+config.yaml

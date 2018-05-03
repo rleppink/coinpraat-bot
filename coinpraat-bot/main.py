@@ -1,6 +1,7 @@
 import multiprocessing
+import yaml
 
-import price_checker
+import coininfo
 import shared
 import telegram
 
@@ -21,7 +22,7 @@ def main():
         )).start()
 
     multiprocessing.Process(
-        target=price_checker.price_checker.handler,
+        target=coininfo.coininfo.handler,
         args=(
             price_check_queue,
             telegram_outgoing_queue,
@@ -35,13 +36,21 @@ def main():
         )).start()
 
 
-# Dummy process
 def queue_glue(in_queue, out_queue):
+    # Just a dummy process for testing purposes
     print("[MAIN] Started queue glue...")
     while True:
         message = in_queue.get()
         out_queue.put(message)
 
 
+def read_config():
+    config_path = "config.yaml"
+    with open(config_path, "r") as config_file:
+        return yaml.load(config_file)
+
+
+
 if __name__ == "__main__":
-    main()
+    print(read_config())
+    # main()
