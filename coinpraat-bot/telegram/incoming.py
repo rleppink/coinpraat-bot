@@ -1,12 +1,11 @@
-import json
 import os
 
-import requests
-
 import telegram.update_getter
+from shared.messages import OutgoingMessage, MessageType
 
 
-def handler(price_check_queue, config):
+def handler(price_check_queue, market_cap_queue, litebit_queue,
+            telegram_outgoing_queue, config):
     print("[IN--] Started Telegram incoming handler...")
 
     while True:
@@ -17,26 +16,44 @@ def handler(price_check_queue, config):
 
         write_last_update_id(config, update["update_id"])
 
-        # TODO: Use a less stringly typed, more strongly typed approach. json to namedtuples?
-
-        if "message" not in update:
+        bot_command = try_get_bot_command(update)
+        if bot_command is None:
             continue
 
-        message = update["message"]
-        if "entities" not in message:
-            continue
+        print("[IN--] " + str(bot_command))
+        if bot_command[0] == "/prijs":
+            price_check_queue.put(bot_command)
+        elif bot_command[0] == "/markt":
+            market_cap_queue.put(bot_command)
+        elif bot_command[0] == "/check":
+            litebit_queue.put(bot_command)
+        elif bot_command[0] == "/testing":
+            telegram_outgoing_queue.put(
+                OutgoingMessage(MessageType.TYPING, None,
+                                update["message"]["chat"]["id"], None))
+        else:
+            telegram_outgoing_queue.put(
+                OutgoingMessage(MessageType.TEXT,
+                                "Sorry, daar kan ik niks mee.",
+                                update["message"]["chat"]["id"],
+                                update["message"]["message_id"]))
 
-        entities = message["entities"]
-        if entities == []:
-            continue
 
-        entity = entities[0]
+def try_get_bot_command(update):
+    """
+    Attempt to get a command from the given message. Return None if not
+    succesful.
+    """
+    try:
+        entity = update["message"]["entities"][0]
         if entity["type"] != "bot_command":
-            continue
+            return None
 
-        command = message["text"][entity["offset"]:entity["length"]]
-        if command == "/prijs":
-            price_check_queue.put(update)
+        return update["message"]["text"].split(' ', 1)
+    except KeyError:
+        # No message, not a bot command, etc. Not something we can or should
+        # handle, so just ignore
+        return None
 
 
 def get_next_update_id(config):
@@ -64,8 +81,8 @@ def write_last_update_id(config, last_update_id):
 
 
 def last_update_id_path(config):
-    return config.data_path + "telegram/" + "last_update_id"
+    return os.path.join(last_update_id_dir(config), "last_update_id")
 
 
 def last_update_id_dir(config):
-    return config.data_path + "telegram/"
+    return os.path.join(config.data_path, "telegram")

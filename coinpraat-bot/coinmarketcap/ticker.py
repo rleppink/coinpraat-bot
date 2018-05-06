@@ -20,14 +20,13 @@ def get_api_ticker_result(coin_id):
 
     try:
         ticker_result = requests.get(ticker_url).json()[0]
-        write_ticker_result(coin_id, ticker_result)
+
+        with open(ticker_result_path(coin_id), "w") as ticker_file:
+            json.dump(ticker_result, ticker_file)
+
         return ticker_result
     except:
         return None
-
-
-def ticker_result_path(coin_id):
-    return "../data/ticker_results/{}.json".format(coin_id)
 
 
 def get_last_ticker_result(coin_id):
@@ -38,9 +37,8 @@ def get_last_ticker_result(coin_id):
         return None
 
 
-def write_ticker_result(coin_id, result):
-    with open(ticker_result_path(coin_id), "w") as ticker_file:
-        json.dump(result, ticker_file)
+def ticker_result_path(coin_id):
+    return "../data/ticker_results/{}.json".format(coin_id)
 
 
 def all_time_high_path(coin_id):

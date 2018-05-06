@@ -21,12 +21,6 @@ def handler(price_check_queue, telegram_outgoing_queue, config):
 def check_price_info(coin_id):
     ticker_result = ticker.get_ticker_result(coin_id)
 
-    if ticker_result is None:
-        arbotrator.send_message(
-            "Sorry, ik kan geen coin vinden met de naam \"{}\"".format(
-                " ".join(update_result["message"]["text"].split(" ")[1:])))
-        return
-
     mcap = nonermalize(ticker_result, "market_cap_usd")
     if mcap is not "Onbekend":
         mcap = "$" + mcap
