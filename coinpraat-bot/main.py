@@ -9,27 +9,20 @@ import telegram
 def main():
     config = read_config()
 
-    price_check_queue = multiprocessing.Queue(config.queue_size)
-    market_cap_check_queue = multiprocessing.Queue(config.queue_size)
-    litebit_check_queue = multiprocessing.Queue(config.queue_size)
     telegram_outgoing_queue = multiprocessing.Queue(config.queue_size)
 
     multiprocessing.Process(
         target=telegram.incoming.handler,
         args=(
-            price_check_queue,
-            market_cap_check_queue,
-            litebit_check_queue,
             telegram_outgoing_queue,
             config,
         )).start()
 
     multiprocessing.Process(
-        target=coinmarketcap.price_checker.handler,
+        target=coinmarketcap.all_time_high.handler,
         args=(
-            price_check_queue,
-            telegram_outgoing_queue,
             config,
+            telegram_outgoing_queue,
         )).start()
 
     multiprocessing.Process(
