@@ -1,13 +1,12 @@
 import multiprocessing
-import types
-import yaml
 
 import coinmarketcap
 import telegram
+import shared
 
 
 def main():
-    config = read_config()
+    config = shared.read_config()
 
     telegram_outgoing_queue = multiprocessing.Queue(config.queue_size)
 
@@ -36,13 +35,6 @@ def queue_glue(in_queue, out_queue):
     while True:
         message = in_queue.get()
         out_queue.put(message)
-
-
-def read_config():
-    config_path = "config.yaml"
-    with open(config_path, "r") as config_file:
-        config = yaml.load(config_file)
-        return types.SimpleNamespace(**config)
 
 
 if __name__ == "__main__":

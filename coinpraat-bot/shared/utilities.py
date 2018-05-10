@@ -1,7 +1,9 @@
 from datetime import datetime
 import time
+import types
 
 import tzlocal
+import yaml
 
 
 def convert_unix_timestamp(unix_timestamp):
@@ -18,3 +20,10 @@ def current_unix_timestamp():
 
 def hours_in_milliseconds(hours):
     return hours * 60 * 60 * 1000
+
+
+def read_config():
+    config_path = "config.yaml"
+    with open(config_path, "r") as config_file:
+        config = yaml.load(config_file)
+        return types.SimpleNamespace(**config)
