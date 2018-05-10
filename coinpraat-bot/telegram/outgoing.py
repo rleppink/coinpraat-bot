@@ -6,7 +6,7 @@ from shared.messages import MessageType
 from . import utilities
 
 
-def handler(outgoing_queue, config):
+def handler(config, outgoing_queue):
     print("[OUT-] Started Telegram outgoing handler...")
     while True:
         outgoing_message = outgoing_queue.get()

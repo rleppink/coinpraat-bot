@@ -7,6 +7,8 @@ stdenv.mkDerivation {
         python36Packages.pyyaml
         python36Packages.requests
         python36Packages.tzlocal
+        python36Packages.munch
+        python36Packages.python-Levenshtein
 
         python36Packages.flake8
         python36Packages.yapf

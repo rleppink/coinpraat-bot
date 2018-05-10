@@ -36,8 +36,11 @@ def _request_update(config, update_id):
     try:
         response = requests.post(
             utilities.telegram_bot_url(config) + "getUpdates",
-            data = {"timeout": config.api_timeout, "offset": update_id},
-            timeout = config.api_timeout)
+            data={
+                "timeout": config.api_timeout,
+                "offset": update_id
+            },
+            timeout=config.api_timeout)
 
         if response is None \
         or response.status_code is not 200:

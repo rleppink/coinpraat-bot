@@ -1,4 +1,12 @@
-""" CoinMarketCap API listings interface. """
+""" CoinMarketCap Listings API interface.
+
+This endpoint displays all active cryptocurrency listings in one call. Use the
+"id" field on the Ticker endpoint to query more information on a specific
+cryptocurrency.
+
+For more information: https://coinmarketcap.com/api/#endpoint_listings
+"""
+
 import json
 import os
 
@@ -20,7 +28,7 @@ class Listing:
         return f"(Listing {self.id}, {self.name}, {self.symbol}, {self.website_slug})"
 
 
-def get_listing_information(config, name):
+def get_listing(config, name):
     """
     Search a given name or symbol in CMC listings.
     Return the name or symbol's listing information.
@@ -29,7 +37,6 @@ def get_listing_information(config, name):
     if cached_listings is not None:
         listing = _search_in_listings(cached_listings, name)
         if listing is not None:
-            print("Cache hit!")
             return _listing_from_json(listing)
 
     updated_listings = _get_updated_listings()

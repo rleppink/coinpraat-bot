@@ -1,21 +1,6 @@
 import json
 
-
-def handler(price_check_queue, telegram_outgoing_queue, config):
-    print("[PRCH] Starting price checker...")
-    while True:
-        price_check_update = price_check_queue.get()
-
-        print("[PRCH] Got price check request: ")
-        print(json.dumps(price_check_update, indent=2))
-
-        message = price_check_update["message"]
-        coin_id = "-".join(message["text"].split(" ")[1:]).lower()
-
-        price_info = check_price_info(coin_id)
-        outgoing_message = construct_message(price_info)
-
-        telegram_outgoing_queue.put(outgoing_message)
+import ticker
 
 
 def check_price_info(coin_id):

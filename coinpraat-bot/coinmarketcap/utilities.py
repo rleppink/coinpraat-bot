@@ -1,4 +1,7 @@
-""" CoinMarketCap API general utilities, used by multiple modules. """
+""" CoinMarketCap API general utilities.
+
+General stuff that's used by multiple modules.
+"""
 
 
 def get_formatted_base_url(path):
