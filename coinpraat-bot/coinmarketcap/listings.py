@@ -10,22 +10,10 @@ For more information: https://coinmarketcap.com/api/#endpoint_listings
 import json
 import os
 
+import munch
 import requests
 
 from . import utilities
-
-
-class Listing:
-    """ A listing on the CMC API. """
-
-    def __init__(self, id, name, symbol, website_slug):
-        self.id = id
-        self.name = name
-        self.symbol = symbol
-        self.website_slug = website_slug
-
-    def __repr__(self):
-        return f"(Listing {self.id}, {self.name}, {self.symbol}, {self.website_slug})"
 
 
 def get_listing(config, name):
@@ -37,7 +25,7 @@ def get_listing(config, name):
     if cached_listings is not None:
         listing = _search_in_listings(cached_listings, name)
         if listing is not None:
-            return _listing_from_json(listing)
+            return munch.Munch.fromDict(listing)
 
     updated_listings = _get_updated_listings()
     if updated_listings is None:  # There is just nothing we can do.
@@ -49,7 +37,7 @@ def get_listing(config, name):
     if listing is None:
         return None
 
-    return _listing_from_json(listing)
+    return munch.Munch.fromDict(listing)
 
 
 def _search_in_listings(listings, name):
@@ -65,8 +53,9 @@ def _search_in_listings(listings, name):
 
 
 def _get_updated_listings():
+    listings_url = utilities.get_formatted_base_url("listings")
+
     try:
-        listings_url = utilities.get_formatted_base_url("listings")
         response = requests.get(listings_url)
         if response is None:
             return None
@@ -103,12 +92,3 @@ def _cache_updated_listings(config, listings):
             return True
     except IOError:
         return None
-
-
-def _listing_from_json(listing_json):
-    return Listing(
-        id=listing_json["id"],
-        name=listing_json["name"],
-        symbol=listing_json["symbol"],
-        website_slug=listing_json["website_slug"],
-    )
