@@ -1,4 +1,5 @@
 api_timeout: 30
-data_path: ../data/
+command_distance: 2
+data_path: data/
 queue_size: 10
 telegram_bot_token: bot12345:ABCDEFGHIJKLMNOPQRSTUVWZXYZ
