@@ -39,7 +39,7 @@ def _construct_price_message(ticker_data):
         f"""
 📈 *{ticker_data.name}* 📉
 
-*$*{ticker_data.quotes.USD.price} | *€*{ticker_data.quotes.EUR.price}
+*$*{ticker_data.quotes.USD.price:0.2f} | *€*{ticker_data.quotes.EUR.price:0.2f}
 *1u* {ticker_data.quotes.USD.percent_change_1h}% | *24u* {ticker_data.quotes.USD.percent_change_24h}% | *7d* {ticker_data.quotes.USD.percent_change_7d}%
 
 Market cap *USD*: ${humanized(ticker_data.quotes.USD.market_cap)}
