@@ -35,11 +35,13 @@ def construct_text_url_and_data(config, outgoing_message):
         "reply_to_message_id": outgoing_message.reply_to_id,
         "disable_web_page_preview": "true",
         "parse_mode": "markdown",
+        "disable_notification": "true",
     })
 
 
 def construct_typing_url_and_data(config, chat_id):
     return (utilities.telegram_bot_url(config) + "sendChatAction", {
         "chat_id": chat_id,
-        "action": "typing"
+        "action": "typing",
+        "disable_notification": "true",
     })
