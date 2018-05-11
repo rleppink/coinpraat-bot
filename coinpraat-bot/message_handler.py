@@ -7,7 +7,7 @@ import random
 import Levenshtein
 
 import coinmarketcap
-import litebit
+# import litebit
 import shared
 
 
@@ -26,7 +26,7 @@ def handler(config, incoming_message_queue, outgoing_message_queue):
         if bot_command is None:
             continue
 
-        message = _get_message_match(bot_command[0], next_message,
+        message = _get_message_match(config, bot_command, next_message,
                                      config.command_distance)
         if message is None:
             continue
@@ -49,20 +49,33 @@ def _try_get_bot_command(update):
         # No message, not a bot command, etc. Not something we can or should
         # handle, so just ignore
         return None
+    except AttributeError:
+        return None
 
 
-def _get_message_match(bot_command, incoming_message, command_distance):
+def _get_message_match(config, bot_command, incoming_message,
+                       command_distance):
     message = None
-    if _matches(bot_command, "/prijs", command_distance):
-        message = _create_general_message(incoming_message, "Prijs check")
+    if _matches(bot_command[0], "/prijs", command_distance):
+        try:
+            price_message = coinmarketcap.price_checker.get_price_message(
+                config, bot_command[1])
+            message = _create_general_message(incoming_message, price_message)
+        except IndexError:
+            message = _create_general_message(incoming_message,
+                                              _get_unknown_request_message())
 
-    elif _matches(bot_command, "/markt", command_distance):
-        message = _create_general_message(incoming_message, "Markt check")
+    elif _matches(bot_command[0], "/markt", command_distance):
+        marketcap_message = \
+            coinmarketcap.total_marketcap.get_marketcap_message()
+        message = _create_general_message(incoming_message, marketcap_message)
 
-    elif _matches(bot_command, "/check", command_distance):
-        message = _create_general_message(incoming_message, "LiteBit check")
+    elif _matches(bot_command[0], "/check", command_distance):
+        message = _create_general_message(
+            incoming_message,
+            "LiteBit check nog niet weer geimplementeerd, sorry.")
 
-    elif _matches(bot_command, "/help", command_distance):
+    elif _matches(bot_command[0], "/help", command_distance):
         message = _create_general_message(incoming_message,
                                           _get_help_message())
 
@@ -86,8 +99,8 @@ def _create_general_message(incoming_message, message_text):
 def _get_unknown_request_message():
     messages = [
         "Sorry, die ken ik niet.", "Hmm, hier kan ik niks mee.",
-        "He, ik weet niet wat je hiermee bedoelt.",
-        "Bedoelde je ook iets anders?", "Probeer het nog eens."
+        "He, ik weet niet wat je hiermee bedoelt.", "Bedoelde je iets anders?",
+        "Probeer het nog eens."
     ]
 
     return random.choice(messages)
