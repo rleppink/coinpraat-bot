@@ -6,7 +6,6 @@ import requests
 
 def get_marketcap_message():
     differences = _get_market_differences()
-    print(differences)
 
     return f"""
     📈 *Totale markt* 📉
@@ -21,10 +20,6 @@ def _get_market_differences():
     h1 = _parse_marketcap_data_hours(1)
     h24 = _parse_marketcap_data_hours(24)
     d7 = _parse_marketcap_data_hours(24 * 7)
-
-    print(h1)
-    print(h24)
-    print(d7)
 
     return (_percent_difference(h1), _percent_difference(h24),
             _percent_difference(d7), h1[2])
@@ -43,12 +38,6 @@ def _parse_marketcap_data_hours(hours):
     start = current_unix_timestamp_ms - hours_in_ms
     end = current_unix_timestamp_ms
 
-    print()
-    print(hours)
-    print(start)
-    print(end)
-    print()
-
     data = _get_marketcap_data(start, end)
 
     if data is None:
@@ -64,8 +53,6 @@ def _parse_marketcap_data_hours(hours):
 def _get_marketcap_data(start, end):
     url = _total_marketcap_url(start, end)
     data = requests.get(url).json()
-
-    print("url: " + url)
 
     if not data:
         return None
